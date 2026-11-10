@@ -1,18 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\OrderRoot\Entities\" />
-    <Folder Include="Entities\OrderRoot\Criterias\" />
-    <Folder Include="Entities\OrderRoot\Events\" />
-    <Folder Include="Entities\OrderRoot\Specifications\" />
-    <Folder Include="Enums\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Taday.CoreLibrary" Version="8.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Entities\OrderRoot\Entities\" />
+		<Folder Include="Entities\OrderRoot\Criterias\" />
+		<Folder Include="Entities\OrderRoot\Events\" />
+		<Folder Include="Entities\OrderRoot\Specifications\" />
+		<Folder Include="Services\" />
+	</ItemGroup>
 
 </Project>
