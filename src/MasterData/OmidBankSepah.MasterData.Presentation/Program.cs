@@ -1,14 +1,20 @@
+using OmidBankSepah.Order.Presentation.Registeration;
+using OmidBankSepah.MasterData.Presentation.Registeration;
+using OmidBankSepah.MasterData.Domain.Entities.ProductRoot;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+
+builder.RegisterDb();
+builder.RegisterLoggerServices();
+builder.RegisterRepositories();
+builder.Services.RegisterMediatR(typeof(ProductCategory).Assembly);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

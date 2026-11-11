@@ -15,6 +15,7 @@
 		<Folder Include="Entities\OrderRoot\Criterias\" />
 		<Folder Include="Entities\OrderRoot\Events\" />
 		<Folder Include="Entities\OrderRoot\Specifications\" />
+		<Folder Include="Valueobjects\" />
 		<Folder Include="Services\" />
 	</ItemGroup>
 

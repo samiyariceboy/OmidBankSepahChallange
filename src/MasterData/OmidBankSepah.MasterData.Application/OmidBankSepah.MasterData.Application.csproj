@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OmidBankSepah.MasterData.Domain\OmidBankSepah.MasterData.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

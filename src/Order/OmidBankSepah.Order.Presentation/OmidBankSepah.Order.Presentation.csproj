@@ -8,11 +8,21 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.23" />
+
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OmidBankSepah.Order.Application\OmidBankSepah.Order.Application.csproj" />
+    <ProjectReference Include="..\OmidBankSepah.Order.Infrastructure\OmidBankSepah.Order.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

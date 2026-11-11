@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CustomerIdInvalid" xml:space="preserve">
+    <value>Customer ID is required.</value>
+  </data>
+  <data name="WalletRequired" xml:space="preserve">
+    <value>Wallet is required.</value>
+  </data>
+  <data name="TransactionRequired" xml:space="preserve">
+    <value>Wallet transaction is required.</value>
+  </data>
+  <data name="TransactionAlreadyAttached" xml:space="preserve">
+    <value>A wallet transaction cannot belong to more than one wallet.</value>
+  </data>
+  <data name="TransactionNotSuccessful" xml:space="preserve">
+    <value>BalanceAfter cannot be set for a transaction that is not successful.</value>
+  </data>
+  <data name="IdempotencyKeyTooLong" xml:space="preserve">
+    <value>Idempotency key cannot exceed 500 characters.</value>
+  </data>
+</root>

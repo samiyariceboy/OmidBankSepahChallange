@@ -1,24 +1,27 @@
 ﻿using OmidBankSepah.Order.Domain.Enums;
+using Taday.Corelibrary.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
+using OmidBankSepah.Order.Domain.Constraint;
 using OmidBankSepah.Order.Domain.Entities.OrderRoot.Aggregates;
 
 namespace OmidBankSepah.Order.Domain.Entities.OrderRoot
 {
-    public class Order
+    public class Order : AggregateRoot, ICloneable, IValidatableObject
     {
 
         private Order()
         {
         }
 
-        private Order(int customerId)
+        private Order(Guid customerId)
         {
+            Id = ImmediateFillId();
             CustomerId = customerId;
             Status = OrderStatus.Pending;
             CreatedAt = DateTime.UtcNow;
         }
 
-        public int Id { get; private set; }
-        public int CustomerId { get; private set; }
+        public Guid CustomerId { get; private set; }
         public OrderStatus Status { get; private set; }
         public decimal TotalAmount { get; private set; }
         public DateTime CreatedAt { get; private set; }
@@ -26,16 +29,20 @@ namespace OmidBankSepah.Order.Domain.Entities.OrderRoot
         private readonly List<OrderItem> _items = [];
         public IReadOnlyList<OrderItem> Items => _items.AsReadOnly();
 
-        public static Order Create(int customerId)
+        protected override string[] IntegrityProperties => throw new NotImplementedException();
+
+        public static Order Create(Guid customerId)
         {
-            if (customerId <= 0)
-                throw new ArgumentOutOfRangeException
-                    (nameof(customerId), "Customer ID must be greater than zero.");
+            OrderAssert.IsSuccess
+            (
+                customerId != Guid.Empty, 
+                [OrderErrors.CustomerIdInvalid]
+            );
 
             return new Order(customerId);
         }
 
-        public OrderItem AddItem(int productId, decimal price, int quantity)
+        public OrderItem AddItem(Guid productId, decimal price, int quantity)
         {
             var item = OrderItem.Create(productId, price, quantity);
             item.AttachTo(this);
@@ -45,23 +52,23 @@ namespace OmidBankSepah.Order.Domain.Entities.OrderRoot
             return item;
         }
 
-        public void UpdateItemQuantity(int itemId, int quantity)
+        public void UpdateItemQuantity(Guid itemId, int quantity)
         {
-            var item = GetItem(itemId);
+            var item = GetItem(itemId, nameof(UpdateItemQuantity));
             item.UpdateQuantity(quantity);
             RecalculateTotalAmount();
         }
 
-        public void UpdateItemPrice(int itemId, decimal price)
+        public void UpdateItemPrice(Guid itemId, decimal price)
         {
-            var item = GetItem(itemId);
+            var item = GetItem(itemId, nameof(UpdateItemPrice));
             item.UpdatePrice(price);
             RecalculateTotalAmount();
         }
 
-        public void RemoveItem(int itemId)
+        public void RemoveItem(Guid itemId)
         {
-            var item = GetItem(itemId);
+            var item = GetItem(itemId, nameof(RemoveItem));
             _items.Remove(item);
             item.DetachFromOrder();
             RecalculateTotalAmount();
@@ -69,24 +76,43 @@ namespace OmidBankSepah.Order.Domain.Entities.OrderRoot
 
         public void UpdateStatus(OrderStatus status)
         {
-            if (!Enum.IsDefined(status))
-                throw new ArgumentOutOfRangeException(nameof(status), "Order status is invalid.");
+            OrderAssert.IsSuccess(Enum.IsDefined(status), [OrderErrors.OrderStatusInvalid]);
 
             Status = status;
         }
 
-        private OrderItem GetItem(int itemId)
+        private OrderItem GetItem(Guid itemId, string methodName)
         {
-            if (itemId <= 0)
-                throw new ArgumentOutOfRangeException(nameof(itemId), "Order item ID must be greater than zero.");
+            OrderAssert.IsSuccess(itemId != Guid.Empty, [OrderErrors.OrderItemIdInvalid]);
 
-            return _items.FirstOrDefault(item => item.Id == itemId)
-                ?? throw new InvalidOperationException($"Order item '{itemId}' was not found.");
+            var item = _items.FirstOrDefault(item => item.Id == itemId);
+            OrderAssert.NotNull(item, methodName, OrderErrors.OrderItemNotFound);
+            return item!;
         }
 
         private void RecalculateTotalAmount()
         {
             TotalAmount = _items.Sum(item => item.TotalPrice);
+        }
+
+        protected override bool SetHasIntegrityChecksum()
+        {
+            return false;
+        }
+
+        public override object GetId()
+        {
+            return Id;
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            return [];
+        }
+
+        public object Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 }

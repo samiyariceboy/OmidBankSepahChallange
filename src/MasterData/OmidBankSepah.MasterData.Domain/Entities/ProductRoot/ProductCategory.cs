@@ -1,32 +1,50 @@
+using Taday.Corelibrary.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
+using OmidBankSepah.MasterData.Domain.Constraint;
+using OmidBankSepah.MasterData.Domain.Contracts.Responses.ProductResponses;
+
 namespace OmidBankSepah.MasterData.Domain.Entities.ProductRoot
 {
-    public class ProductCategory
+    public class ProductCategory : AggregateRoot, ICloneable, IValidatableObject
     {
         private ProductCategory()
         {
         }
 
-        private ProductCategory(string name, string description, int? parentProductCategoryId, string code)
+        private ProductCategory(
+            string name, 
+            string description,
+            int? parentProductCategoryId,
+            string code
+        )
         {
+            Id = ImmediateFillId();
+
+            Code = code;
             Name = name;
+            IsActive = true;
             Description = description;
             ParentProductCategoryId = parentProductCategoryId;
-            Code = code;
-            IsActive = true;
         }
 
-        public int Id { get; private set; }
+        public bool IsActive { get; private set; }
         public string Name { get; private set; } = string.Empty;
-        public string Description { get; private set; } = string.Empty;
         public string Code { get; private set; } = string.Empty;
         public int? ParentProductCategoryId { get; private set; }
-        public bool IsActive { get; private set; }
+        public string Description { get; private set; } = string.Empty;
 
-        public static ProductCategory Create(
+        private readonly List<Products> _products = [];
+        public IReadOnlyList<Products> Products => _products.AsReadOnly();
+
+        protected override string[] IntegrityProperties => [];
+
+        public static ProductCategory Create
+        (
             string name,
             string description,
             int? parentProductCategoryId,
-            string code)
+            string code
+        )
         {
             Validate(name, description, parentProductCategoryId, code);
 
@@ -34,7 +52,8 @@ namespace OmidBankSepah.MasterData.Domain.Entities.ProductRoot
                 name.Trim(),
                 description.Trim(),
                 parentProductCategoryId,
-                code.Trim());
+                code.Trim()
+            );
         }
 
         public void Update(
@@ -59,17 +78,48 @@ namespace OmidBankSepah.MasterData.Domain.Entities.ProductRoot
             int? parentProductCategoryId,
             string code)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Category name is required.", nameof(name));
+            MasterDataAssert.IsSuccess(
+                !string.IsNullOrWhiteSpace(name),
+                [MasterDataErrors.CategoryNameRequired]
+            );
 
-            if (description is null)
-                throw new ArgumentNullException(nameof(description));
+            MasterDataAssert.NotNull(
+                description,
+                nameof(Validate),
+                MasterDataErrors.CategoryDescriptionRequired
+            );
 
-            if (parentProductCategoryId is <= 0)
-                throw new ArgumentOutOfRangeException(nameof(parentProductCategoryId), "Parent category ID must be greater than zero.");
+            MasterDataAssert.IsSuccess(
+                parentProductCategoryId is null or > 0,
+                [MasterDataErrors.ParentCategoryIdInvalid]
+            );
 
-            if (string.IsNullOrWhiteSpace(code))
-                throw new ArgumentException("Category code is required.", nameof(code));
+            MasterDataAssert.IsSuccess(
+                !string.IsNullOrWhiteSpace(code),
+                [MasterDataErrors.CategoryCodeRequired]
+            );
+        }
+
+        protected override bool SetHasIntegrityChecksum()
+        {
+            return false;
+        }
+
+        public override object GetId()
+        {
+            return Id;
+        }
+
+        public object Clone()
+        {
+            return new ProductCategoryRes 
+            {
+            };
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            return [];
         }
     }
 }

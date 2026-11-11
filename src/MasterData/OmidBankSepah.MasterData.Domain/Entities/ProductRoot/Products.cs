@@ -1,19 +1,25 @@
+using Taday.Corelibrary.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
+using OmidBankSepah.MasterData.Domain.Constraint;
+
 namespace OmidBankSepah.MasterData.Domain.Entities.ProductRoot
 {
-    public class Products
+    public class Products : AggregateRoot, ICloneable, IValidatableObject
     {
         private Products()
         {
         }
 
         private Products(
-            int productCategoryId,
+            Guid productCategoryId,
             string productName,
             string brandName,
             string modelName,
             int productYear,
             string productDescription)
         {
+            Id = ImmediateFillId();
+
             ProductCategoryId = productCategoryId;
             ProductName = productName;
             BrandName = brandName;
@@ -22,23 +28,28 @@ namespace OmidBankSepah.MasterData.Domain.Entities.ProductRoot
             ProductDescription = productDescription;
         }
 
-        public int Id { get; private set; }
-        public int ProductCategoryId { get; private set; }
+        public int ProductYear { get; private set; }
         public string ProductName { get; private set; } = string.Empty;
         public string BrandName { get; private set; } = string.Empty;
         public string ModelName { get; private set; } = string.Empty;
-        public int ProductYear { get; private set; }
         public string ProductDescription { get; private set; } = string.Empty;
 
+        public Guid ProductCategoryId { get; private set; }
+        public ProductCategory? ProductCategory { get; private set; }
+
+
         public static Products Create(
-            int productCategoryId,
+            Guid productCategoryId,
             string productName,
             string brandName,
             string modelName,
             int productYear,
             string productDescription)
         {
-            Validate(productCategoryId, productName, brandName, modelName, productYear, productDescription);
+            Validate(productCategoryId, 
+                productName, brandName,
+                modelName, productYear,
+                productDescription);
 
             return new Products(
                 productCategoryId,
@@ -50,48 +61,87 @@ namespace OmidBankSepah.MasterData.Domain.Entities.ProductRoot
         }
 
         public void Update(
-            int productCategoryId,
+            Guid productCategoryId,
             string productName,
             string brandName,
             string modelName,
             int productYear,
             string productDescription)
         {
-            Validate(productCategoryId, productName, brandName, modelName, productYear, productDescription);
+            Validate(productCategoryId, 
+                productName, brandName, 
+                modelName, productYear, 
+                productDescription);
 
-            ProductCategoryId = productCategoryId;
-            ProductName = productName.Trim();
+            ProductYear = productYear;
             BrandName = brandName.Trim();
             ModelName = modelName.Trim();
-            ProductYear = productYear;
+            ProductName = productName.Trim();
+            ProductCategoryId = productCategoryId;
             ProductDescription = productDescription.Trim();
         }
 
         private static void Validate(
-            int productCategoryId,
+            Guid productCategoryId,
             string productName,
             string brandName,
             string modelName,
             int productYear,
             string productDescription)
         {
-            if (productCategoryId <= 0)
-                throw new ArgumentOutOfRangeException(nameof(productCategoryId), "Product category ID must be greater than zero.");
+            MasterDataAssert.IsSuccess(
+                productCategoryId != Guid.Empty,
+                [MasterDataErrors.ProductCategoryIdInvalid]
+            );
 
-            if (string.IsNullOrWhiteSpace(productName))
-                throw new ArgumentException("Product name is required.", nameof(productName));
+            MasterDataAssert.IsSuccess(
+                !string.IsNullOrWhiteSpace(productName),
+                [MasterDataErrors.ProductNameRequired]
+            );
 
-            if (string.IsNullOrWhiteSpace(brandName))
-                throw new ArgumentException("Brand name is required.", nameof(brandName));
+            MasterDataAssert.IsSuccess(
+                !string.IsNullOrWhiteSpace(brandName),
+                [MasterDataErrors.BrandNameRequired]
+            );
 
-            if (string.IsNullOrWhiteSpace(modelName))
-                throw new ArgumentException("Model name is required.", nameof(modelName));
+            MasterDataAssert.IsSuccess(
+                !string.IsNullOrWhiteSpace(modelName),
+                [MasterDataErrors.ModelNameRequired]
+            );
 
-            if (productYear <= 0)
-                throw new ArgumentOutOfRangeException(nameof(productYear), "Product year must be greater than zero.");
+            MasterDataAssert.IsSuccess(
+                productYear > 0,
+                [MasterDataErrors.ProductYearInvalid]
+            );
 
-            if (productDescription is null)
-                throw new ArgumentNullException(nameof(productDescription));
+            MasterDataAssert.NotNull(
+                productDescription,
+                nameof(Validate),
+                MasterDataErrors.ProductDescriptionRequired
+            );
         }
+
+        protected override bool SetHasIntegrityChecksum()
+        {
+            return false;
+        }
+
+        public override object GetId()
+        {
+            return Id;
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            return [];
+        }
+
+        public object Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string[] IntegrityProperties => [];
+
     }
 }

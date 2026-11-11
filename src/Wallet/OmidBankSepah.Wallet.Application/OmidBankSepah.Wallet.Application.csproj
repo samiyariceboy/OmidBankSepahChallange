@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OmidBankSepah.Wallet.Domain\OmidBankSepah.Wallet.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -14,4 +14,9 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OmidBankSepah.Wallet.Application\OmidBankSepah.Wallet.Application.csproj" />
+    <ProjectReference Include="..\OmidBankSepah.Wallet.Infrastructure\OmidBankSepah.Wallet.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

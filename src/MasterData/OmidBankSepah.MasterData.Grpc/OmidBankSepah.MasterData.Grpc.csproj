@@ -14,4 +14,9 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OmidBankSepah.MasterData.Application\OmidBankSepah.MasterData.Application.csproj" />
+    <ProjectReference Include="..\OmidBankSepah.MasterData.Infrastructure\OmidBankSepah.MasterData.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

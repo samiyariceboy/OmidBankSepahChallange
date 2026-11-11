@@ -10,4 +10,8 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OmidBankSepah.Identity.Domain\OmidBankSepah.Identity.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
