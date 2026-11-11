@@ -6,6 +6,11 @@
     <Project Path="src/Order/OmidBankSepah.Order.Infrastructure/OmidBankSepah.Order.Infrastructure.csproj" />
     <Project Path="src/Order/OmidBankSepah.Order.Presentation/OmidBankSepah.Order.Presentation.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OmidBankSepah.MasterData.IntegrationTests/OmidBankSepah.MasterData.IntegrationTests.csproj" />
+    <Project Path="tests/OmidBankSepah.MasterData.UnitTests/OmidBankSepah.MasterData.UnitTests.csproj" />
+    <Project Path="tests/OmidBankSepah.Order.UnitTests/OmidBankSepah.Order.UnitTests.csproj" />
+  </Folder>
   <Folder Name="/Wallet/">
     <Project Path="src/Wallet/OmidBankSepah.Wallet.Application/OmidBankSepah.Wallet.Application.csproj" Id="d9982756-d096-43d8-b135-baad4822a211" />
     <Project Path="src/Wallet/OmidBankSepah.Wallet.Domain/OmidBankSepah.Wallet.Domain.csproj" Id="7574ade0-1270-4ae8-95f5-d3437e1b71a9" />

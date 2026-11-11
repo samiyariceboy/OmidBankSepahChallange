@@ -2,7 +2,7 @@ using System.Resources;
 using System.Globalization;
 
 namespace OmidBankSepah.Order.Domain.Constraint;
-internal static class OrderErrors
+public static class OrderErrors
 {
     private static readonly ResourceManager Resources = new(
         "OmidBankSepah.Order.Domain.Constraint.OrderErrors",
@@ -17,6 +17,13 @@ internal static class OrderErrors
     public static string QuantityMustBePositive => Get(nameof(QuantityMustBePositive));
     public static string PriceCannotBeNegative => Get(nameof(PriceCannotBeNegative));
     public static string ProductIdInvalid => Get(nameof(ProductIdInvalid));
+    public static string OrderItemsRequired => Get(nameof(OrderItemsRequired));
+    public static string IdempotencyKeyRequired => Get(nameof(IdempotencyKeyRequired));
+    public static string IdempotencyKeyTooLong => Get(nameof(IdempotencyKeyTooLong));
+    public static string OrderIdempotencyConflict => Get(nameof(OrderIdempotencyConflict));
+    public static string OrderMustBePending => Get(nameof(OrderMustBePending));
+    public static string OrderLockUnavailable => Get(nameof(OrderLockUnavailable));
+    public static string OrderRequestRequired => Get(nameof(OrderRequestRequired));
 
     private static string Get(string key)
     {

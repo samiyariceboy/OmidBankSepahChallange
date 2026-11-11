@@ -1,6 +1,7 @@
 using Taday.Corelibrary.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using OmidBankSepah.MasterData.Domain.Constraint;
+using OmidBankSepah.MasterData.Domain.Contracts.Responses.ProductResponses;
 
 namespace OmidBankSepah.MasterData.Domain.Entities.ProductRoot
 {
@@ -138,7 +139,14 @@ namespace OmidBankSepah.MasterData.Domain.Entities.ProductRoot
 
         public object Clone()
         {
-            throw new NotImplementedException();
+            return new ProductRes(
+                Id,
+                ProductCategoryId,
+                ProductName,
+                BrandName,
+                ModelName,
+                ProductYear,
+                ProductDescription);
         }
 
         protected override string[] IntegrityProperties => [];

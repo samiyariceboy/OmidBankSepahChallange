@@ -14,4 +14,8 @@
     <ProjectReference Include="..\OmidBankSepah.Order.Domain\OmidBankSepah.Order.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="RedLock.net" Version="2.3.2" />
+  </ItemGroup>
+
 </Project>

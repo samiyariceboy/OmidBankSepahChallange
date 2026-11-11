@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option csharp_namespace = "OmidBankSepah.MasterData.Grpc";
+
+package omidbanksepah.masterdata.productavailability.v1;
+
+service ProductAvailabilityGrpc {
+  rpc IncreaseProductAvailability (IncreaseProductAvailabilityReq) returns (ProductAvailabilityRes);
+  rpc GetProductAvailability (GetProductAvailabilityReq) returns (ProductAvailabilityRes);
+  rpc ReserveProductAvailability (ReserveProductAvailabilityReq) returns (ProductAvailabilityReservationRes);
+}
+
+message IncreaseProductAvailabilityReq {
+  string product_id = 1;
+  int32 quantity = 2;
+}
+
+message GetProductAvailabilityReq {
+  string product_id = 1;
+}
+
+message ProductAvailabilityRes {
+  bool found = 1;
+  string product_id = 2;
+  int32 available_quantity = 3;
+}
+
+message ReserveProductAvailabilityReq {
+  string order_id = 1;
+  repeated ProductAvailabilityItemReq items = 2;
+}
+
+message ProductAvailabilityItemReq {
+  string product_id = 1;
+  int32 quantity = 2;
+}
+
+message ProductAvailabilityReservationRes {
+  bool is_reserved = 1;
+  repeated UnavailableProductAvailabilityRes unavailable_items = 2;
+}
+
+message UnavailableProductAvailabilityRes {
+  string product_id = 1;
+  int32 requested_quantity = 2;
+  int32 available_quantity = 3;
+}

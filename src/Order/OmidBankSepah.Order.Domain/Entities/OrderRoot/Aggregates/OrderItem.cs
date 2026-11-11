@@ -1,10 +1,12 @@
 ﻿using Taday.Corelibrary.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 using OmidBankSepah.Order.Domain.Constraint;
 using OmidBankSepah.Order.Domain.Entities.OrderRoot;
+using OmidBankSepah.Order.Domain.Contracts.Responses;
 
 namespace OmidBankSepah.Order.Domain.Entities.OrderRoot.Aggregates
 {
-    public class OrderItem : BaseEntity, ICloneable
+    public class OrderItem : BaseEntity, ICloneable, IValidatableObject
     {
         private OrderItem()
         {
@@ -12,6 +14,7 @@ namespace OmidBankSepah.Order.Domain.Entities.OrderRoot.Aggregates
 
         private OrderItem(Guid productId, decimal price, int quantity)
         {
+            Id = ImmediateFillId();
             Price = price;
             Quantity = quantity;
             ProductId = productId;
@@ -98,12 +101,22 @@ namespace OmidBankSepah.Order.Domain.Entities.OrderRoot.Aggregates
 
         public override object GetId()
         {
-            throw new NotImplementedException();
+            return Id;
         }
 
         public object Clone()
         {
-            throw new NotImplementedException();
+            return new OrderItemRes(
+                Id,
+                ProductId,
+                Price,
+                Quantity,
+                TotalPrice);
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            return [];
         }
     }
 }

@@ -88,6 +88,162 @@ namespace OmidBankSepah.MasterData.Infrastructure.Migrations
                     b.ToTable("ProductCategories");
                 });
 
+            modelBuilder.Entity("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasIntegrityChecksum")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("IntegrityChecksum")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_ProductInventories_ProductId");
+
+                    b.ToTable("ProductInventories");
+                });
+
+            modelBuilder.Entity("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventoryReservation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasIntegrityChecksum")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("IntegrityChecksum")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsReserved")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_ProductInventoryReservations_OrderId");
+
+                    b.ToTable("ProductInventoryReservations");
+                });
+
+            modelBuilder.Entity("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventoryReservationItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<int>("AvailableQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasIntegrityChecksum")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("IntegrityChecksum")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductInventoryReservationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("RequestedQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("IX_ProductInventoryReservationItems_ProductId");
+
+                    b.HasIndex("ProductInventoryReservationId", "ProductId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_ProductInventoryReservationItems_ReservationId_ProductId");
+
+                    b.ToTable("ProductInventoryReservationItems");
+                });
+
             modelBuilder.Entity("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.Products", b =>
                 {
                     b.Property<Guid>("Id")
@@ -219,6 +375,15 @@ namespace OmidBankSepah.MasterData.Infrastructure.Migrations
                     b.Property<Guid?>("ProductCategoryId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ProductInventoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ProductInventoryReservationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ProductInventoryReservationItemId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("ProductsId")
                         .HasColumnType("uniqueidentifier");
 
@@ -244,9 +409,35 @@ namespace OmidBankSepah.MasterData.Infrastructure.Migrations
 
                     b.HasIndex("ProductCategoryId");
 
+                    b.HasIndex("ProductInventoryId");
+
+                    b.HasIndex("ProductInventoryReservationId");
+
+                    b.HasIndex("ProductInventoryReservationItemId");
+
                     b.HasIndex("ProductsId");
 
                     b.ToTable("EntityVersions");
+                });
+
+            modelBuilder.Entity("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventory", b =>
+                {
+                    b.HasOne("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.Products", null)
+                        .WithOne()
+                        .HasForeignKey("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventory", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventoryReservationItem", b =>
+                {
+                    b.HasOne("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventoryReservation", "ProductInventoryReservation")
+                        .WithMany("Items")
+                        .HasForeignKey("ProductInventoryReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductInventoryReservation");
                 });
 
             modelBuilder.Entity("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.Products", b =>
@@ -270,6 +461,18 @@ namespace OmidBankSepah.MasterData.Infrastructure.Migrations
                         .WithMany("Versions")
                         .HasForeignKey("ProductCategoryId");
 
+                    b.HasOne("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventory", null)
+                        .WithMany("Versions")
+                        .HasForeignKey("ProductInventoryId");
+
+                    b.HasOne("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventoryReservation", null)
+                        .WithMany("Versions")
+                        .HasForeignKey("ProductInventoryReservationId");
+
+                    b.HasOne("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventoryReservationItem", null)
+                        .WithMany("Versions")
+                        .HasForeignKey("ProductInventoryReservationItemId");
+
                     b.HasOne("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.Products", null)
                         .WithMany("Versions")
                         .HasForeignKey("ProductsId");
@@ -279,6 +482,23 @@ namespace OmidBankSepah.MasterData.Infrastructure.Migrations
                 {
                     b.Navigation("Products");
 
+                    b.Navigation("Versions");
+                });
+
+            modelBuilder.Entity("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventory", b =>
+                {
+                    b.Navigation("Versions");
+                });
+
+            modelBuilder.Entity("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventoryReservation", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("Versions");
+                });
+
+            modelBuilder.Entity("OmidBankSepah.MasterData.Domain.Entities.ProductRoot.ProductInventoryReservationItem", b =>
+                {
                     b.Navigation("Versions");
                 });
 

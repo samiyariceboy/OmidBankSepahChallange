@@ -11,6 +11,17 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<OrderEntity>
             .Property(order => order.TotalAmount)
             .HasPrecision(18, 2);
 
+        builder.Property(order => order.IdempotencyKey)
+            .HasMaxLength(100)
+            .IsRequired();
+
+        builder.Property(order => order.RowVersion)
+            .IsRowVersion();
+
+        builder.HasIndex(order => order.IdempotencyKey)
+            .IsUnique()
+            .HasDatabaseName("UX_Orders_IdempotencyKey");
+
         builder
             .HasIndex(order => new { order.CustomerId, order.CreatedAt })
             .HasDatabaseName("IX_Orders_CustomerId_CreatedAt");

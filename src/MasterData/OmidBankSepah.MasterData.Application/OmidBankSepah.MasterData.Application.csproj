@@ -10,4 +10,8 @@
     <ProjectReference Include="..\OmidBankSepah.MasterData.Domain\OmidBankSepah.MasterData.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="RedLock.net" Version="2.3.2" />
+  </ItemGroup>
+
 </Project>

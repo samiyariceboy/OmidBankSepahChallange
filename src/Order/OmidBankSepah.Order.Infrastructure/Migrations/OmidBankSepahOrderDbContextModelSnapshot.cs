@@ -106,9 +106,23 @@ namespace OmidBankSepah.Order.Infrastructure.Migrations
                     b.Property<bool>("HasIntegrityChecksum")
                         .HasColumnType("bit");
 
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("IntegrityChecksum")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RejectionReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -124,6 +138,10 @@ namespace OmidBankSepah.Order.Infrastructure.Migrations
 
                     b.HasIndex("CreatedAt")
                         .HasDatabaseName("IX_Orders_CreatedAt");
+
+                    b.HasIndex("IdempotencyKey")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Orders_IdempotencyKey");
 
                     b.HasIndex("CustomerId", "CreatedAt")
                         .HasDatabaseName("IX_Orders_CustomerId_CreatedAt");

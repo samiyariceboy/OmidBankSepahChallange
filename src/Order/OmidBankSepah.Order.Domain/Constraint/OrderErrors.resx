@@ -39,4 +39,25 @@
   <data name="ProductIdInvalid" xml:space="preserve">
     <value>Product ID cannot be empty.</value>
   </data>
+  <data name="OrderItemsRequired" xml:space="preserve">
+    <value>An order must contain at least one item.</value>
+  </data>
+  <data name="IdempotencyKeyRequired" xml:space="preserve">
+    <value>Idempotency key is required.</value>
+  </data>
+  <data name="IdempotencyKeyTooLong" xml:space="preserve">
+    <value>Idempotency key cannot exceed 100 characters.</value>
+  </data>
+  <data name="OrderIdempotencyConflict" xml:space="preserve">
+    <value>This idempotency key is already associated with a different order request.</value>
+  </data>
+  <data name="OrderMustBePending" xml:space="preserve">
+    <value>Only a pending order can transition to a final status.</value>
+  </data>
+  <data name="OrderLockUnavailable" xml:space="preserve">
+    <value>An order with this idempotency key is already being processed.</value>
+  </data>
+  <data name="OrderRequestRequired" xml:space="preserve">
+    <value>Order request is required.</value>
+  </data>
 </root>

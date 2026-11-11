@@ -42,4 +42,25 @@
   <data name="CategoryCodeRequired" xml:space="preserve">
     <value>Category code is required.</value>
   </data>
+  <data name="ProductIdInvalid" xml:space="preserve">
+    <value>Product ID must be a valid GUID.</value>
+  </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>Product was not found.</value>
+  </data>
+  <data name="InventoryQuantityInvalid" xml:space="preserve">
+    <value>Inventory quantity must be greater than zero.</value>
+  </data>
+  <data name="InventoryItemsRequired" xml:space="preserve">
+    <value>At least one inventory item is required.</value>
+  </data>
+  <data name="OrderIdInvalid" xml:space="preserve">
+    <value>Order ID must be a valid GUID.</value>
+  </data>
+  <data name="OrderReservationConflict" xml:space="preserve">
+    <value>This order ID is already associated with a different inventory request.</value>
+  </data>
+  <data name="InventoryLockUnavailable" xml:space="preserve">
+    <value>Product availability is already being updated. Retry the request.</value>
+  </data>
 </root>

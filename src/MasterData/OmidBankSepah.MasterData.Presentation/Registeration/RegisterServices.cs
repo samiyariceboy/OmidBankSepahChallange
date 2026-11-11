@@ -1,4 +1,5 @@
 ﻿using Taday.Corelibrary.Common.Shared;
+using OmidBankSepah.MasterData.Domain.Services.DomainServices;
 using OmidBankSepah.MasterData.Domain.Repositories;
 using OmidBankSepah.MasterData.Infrastructure.Repositories;
 
@@ -15,6 +16,8 @@ namespace OmidBankSepah.MasterData.Presentation.Registeration
         {
             builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
             builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+            builder.Services.AddScoped<IProductInventoryRepository, ProductInventoryRepository>();
+            builder.Services.AddScoped<IProductInventoryReservationRepository, ProductInventoryReservationRepository>();
         }
     }
 }

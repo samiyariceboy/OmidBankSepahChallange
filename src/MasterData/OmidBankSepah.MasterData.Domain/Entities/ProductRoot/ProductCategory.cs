@@ -112,9 +112,16 @@ namespace OmidBankSepah.MasterData.Domain.Entities.ProductRoot
 
         public object Clone()
         {
-            return new ProductCategoryRes 
-            {
-            };
+            return new ProductCategoryRes(
+                Id,
+                IsActive,
+                Name,
+                Code,
+                ParentProductCategoryId,
+                Description,
+                _products
+                    .Select(product => (ProductRes)product.Clone())
+                    .ToArray());
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
