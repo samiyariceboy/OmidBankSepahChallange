@@ -1,31 +1,41 @@
 # OmidBankSepah
 
-## مبانی معماری و CoreLibrary
+## نگاه من به معماری و CoreLibrary
 
-این راهکار بر `Taday.Corelibrary` تکیه دارد. این کتابخانه مجموعه‌ای از قراردادها و پیاده‌سازی‌های پایه را برای سرویس‌ها فراهم می‌کند؛ از جمله `AggregateRoot`، `BaseEntity`، `BaseDbContext`، `CoreExeptionHandlerMiddleware`، `RabbitMqBaseService`، `BaseRepository`، `BaseSpecification` و `CriteriaSpecification`. این الگوها اساس مشترک پروژه هستند و در ارائه‌ی کدچلنج، توضیح معماری سرویس‌ها باید با معرفی همین پایه‌ها آغاز شود.
+`Taday.Corelibrary` را خودم نوشته‌ام و طی چند سال، با استفاده از آن در پروژه‌ها و اصلاح تدریجی‌اش، به بلوغ رسانده‌ام. پایه‌هایی مثل `AggregateRoot`، `BaseEntity`، `BaseDbContext`، `CoreExeptionHandlerMiddleware`، `RabbitMqBaseService`، `BaseRepository`، `BaseSpecification` و `CriteriaSpecification` داخل همین کتابخانه‌اند. من اساس سرویس‌های این پروژه را روی این Core گذاشته‌ام؛ برای همین در ارائه‌ی کدچلنج، اول توضیح می‌دهم این پایه‌ها چه مسئولیتی دارند و بعد سراغ خود سرویس‌ها می‌روم.
 
 ### دامنه، Aggregate و اعتبارسنجی
 
-- منطق و قواعد کسب‌وکار در Domain قرار دارند. Aggregate Rootها از `AggregateRoot` و موجودیت‌های درون Aggregate از `BaseEntity` مشتق می‌شوند؛ تغییر وضعیت باید از مسیر رفتارهای دامنه انجام شود، نه با دسترسی آزاد به setterها. `BaseEntity` متد `ImmediateFillId()` را برای تولید شناسه‌ی فوری در اختیار سازنده‌ی موجودیت قرار می‌دهد؛ تولید شناسه خودکار هنگام `SaveChanges` انجام نمی‌شود.
-- `BaseDbContext` پیش از نوشتن، ChangeTracker را بررسی می‌کند و `IValidatableObject`های Added/Modified را اعتبارسنجی می‌کند. خطاهای `ValidationResult` جمع‌آوری می‌شوند و در صورت وجود، مسیر ذخیره‌سازی متوقف و خطای دامنه تولید می‌شود. در مسیرهای ذخیره‌سازی که انتشار خطا را حفظ می‌کنند، Middleware مرکزی خطا را به پاسخ استاندارد API تبدیل می‌کند.
-- Aggregate Rootها نگهدارنده‌ی Domain Eventها هستند؛ `BaseDbContext` پس از ذخیره‌ی موفق، رویدادهای موجود در Aggregate Rootهای Trackشده را منتشر و سپس پاک می‌کند. این الگو به‌تنهایی Outbox نیست و در صورت توقف پردازش پس از commit، تضمین اتمیک برای انتشار رویداد نمی‌دهد.
-- نکته‌ی پیاده‌سازی Core: overload فعلی `SaveChangesAsync(CancellationToken)` استثناها را می‌گیرد و `0` برمی‌گرداند. بنابراین استثناهای این مسیر به Middleware نمی‌رسند؛ برای نمایش این خطاها توسط Middleware، باید خطا در مسیر ذخیره‌سازی propagate شود.
+- من قواعد کسب‌وکار را در Domain نگه داشته‌ام. Aggregate Rootها از `AggregateRoot` و موجودیت‌های داخل Aggregate از `BaseEntity` مشتق می‌شوند؛ تغییر وضعیت را از رفتارهای خود دامنه انجام می‌دهم، نه با setterهای آزاد. `BaseEntity` متد `ImmediateFillId()` را برای زمانی که سازنده باید شناسه را همان ابتدا بسازد فراهم می‌کند؛ این کار خودکار در `SaveChanges` انجام نمی‌شود.
+- من اعتبارسنجی پیش از ذخیره را در `BaseDbContext` متمرکز کرده‌ام: ChangeTracker بررسی می‌شود و `IValidatableObject`های Added/Modified اعتبارسنجی می‌شوند. اگر `ValidationResult` داشته باشیم، ذخیره متوقف و خطای دامنه تولید می‌شود؛ خطایی که از مسیر ذخیره‌سازی عبور کند را Middleware مرکزی به پاسخ استاندارد API تبدیل می‌کند.
+- من Domain Eventها را روی Aggregate Root نگه می‌دارم. پس از ذخیره‌ی موفق، `BaseDbContext` رویدادهای Aggregate Rootهای Trackشده را منتشر و بعد پاک می‌کند.
+- یک نکته‌ی فعلی Core را هم شفاف می‌گویم: overload `SaveChangesAsync(CancellationToken)` استثناها را می‌گیرد و `0` برمی‌گرداند. پس استثنای این مسیر به Middleware نمی‌رسد؛ اگر بخواهم Middleware آن خطا را به کاربر برگرداند، باید exception از مسیر ذخیره‌سازی propagate شود.
 
 ### Specification و Repository
 
-در Domain، Specificationها محل تعریف فیلترها، مرتب‌سازی، صفحه‌بندی و Includeهای موردنیاز هستند؛ Repository زیرساختی آن‌ها را روی query اعمال می‌کند و خروجی را به‌شکل مجموعه‌ی مادی‌شده (مانند `List`) یا توالی برمی‌گرداند. `BaseSpecification` امکان ترکیب Specificationها را فراهم می‌کند و `CriteriaSpecification` قابلیت ترکیب شرط‌ها با `And`، `Or` و `Not` را دارد. `MergedSpecification` نیز برای ارزیابی چند Specification در کنار هم وجود دارد.
+من فیلترها، مرتب‌سازی، صفحه‌بندی و Includeهای هر درخواست داده را در Specificationهای Domain تعریف می‌کنم؛ Repository زیرساختی همان Specification را روی query اعمال می‌کند و نتیجه را به‌شکل مجموعه (مثلاً `List`) یا توالی برمی‌گرداند. `BaseSpecification` پایه‌ی این الگوست. برای شرط‌ها هم `CriteriaSpecification` را گذاشته‌ام تا بتوانم آن‌ها را با `And`، `Or` و `Not` ترکیب کنم؛ `MergedSpecification` هم چند Specification را کنار هم ارزیابی می‌کند.
 
-طبق قاعده‌ی DDD این راهکار، Repository اختصاصی برای Aggregate Root تعریف می‌شود. `BaseRepository` در Core نیز نوع موجودیت را به `IAggregateRoot` محدود کرده و به‌صورت abstract ارائه شده است؛ سرویس‌ها از Repositoryهای دامنه‌ای استفاده می‌کنند، نه از پیاده‌سازی عمومی آن. مرز پروژه‌ها Domain را از EF Core و جزئیات پایگاه‌داده جدا نگه می‌دارد و پیاده‌سازی Repository و Context در Infrastructure قرار دارد.
+من برای هر Aggregate Root قرارداد Repository دامنه‌ای تعریف می‌کنم و Repository عمومی را مستقیم به سرویس‌ها نمی‌دهم. `BaseRepository` در Core هم abstract است و نوعی که می‌گیرد باید `IAggregateRoot` باشد. به این ترتیب، در مسیر معمول برنامه DbContext یا Repository عمومی را مستقیم Inject نمی‌کنم؛ پیاده‌سازی EF Core و Context در Infrastructure است و Domain به جزئیات دیتابیس وابسته نیست.
 
 ### Application، قراردادها و خطاها
 
-Application مسئول هماهنگی Use Caseها، مدیریت جریان کار و فراخوانی Domain Serviceها و وابستگی‌های بیرونی است؛ قواعد اصلی کسب‌وکار در Domain Service و Aggregateها نگهداری می‌شوند. قراردادهای Request/Response دامنه برای عبور داده بین مرزها استفاده می‌شوند تا Entityها مستقیماً به API نشت نکنند. قراردادهای اینترفیس‌های Application در پوشه‌ی `Interfaces` نگهداری می‌شوند و هر Use Case، Command و Handler خود را در پوشه‌ی مربوط به همان Use Case دارد.
+من در Application جریان Use Case را هماهنگ می‌کنم و Domain Serviceها، Repositoryها و سرویس‌های بیرونی را به هم وصل می‌کنم؛ قانون اصلی کسب‌وکار را آنجا کپی نمی‌کنم و در Domain Service یا Aggregate نگه می‌دارم.
 
-برای خطاهای دامنه و ورودی از Assertهای اختصاصی استفاده می‌شود تا خطاها با نوع و داده‌ی مناسب تولید شوند. Middlewareهای سرویس‌ها از `CoreExeptionHandlerMiddleware` ارث می‌برند و exceptionهای قابل‌انتشار را به ساختار پاسخ استاندارد تبدیل می‌کنند. این قرارداد فقط زمانی برقرار است که لایه‌ی پایین‌تر exception را نبلعد یا به مقدار موفقیت‌نما تبدیل نکند.
+برای اینکه Entity خام از Domain بیرون نرود، من مرز ورود و خروج را با Contractهای `Req` و `Res` مشخص کرده‌ام:
+
+- وقتی DTO یا پیام ورودی قرار است وارد منطق Domain شود، آن را به Contract درخواست دامنه (`Req`) تبدیل می‌کنم؛ Domain Service به‌جای DTO مربوط به HTTP یا gRPC، همین ورودی دامنه را دریافت می‌کند.
+- وقتی نتیجه از Domain بیرون می‌آید، Entity را مستقیم به DTO تبدیل یا serialize نمی‌کنم؛ آن را به Contract پاسخ دامنه (`Res`) تبدیل می‌کنم و لایه‌ی بیرونی در صورت نیاز `Res` را به پاسخ HTTP یا gRPC خودش map می‌کند.
+
+پس هدف Contract برای من صرفاً داشتن چند کلاس Request/Response نیست: Entity هیچ‌وقت به‌صورت خام از Domain خارج نمی‌شود و Domain هم به شکل DTOهای مخصوص Presentation آلوده نمی‌شود. اینترفیس‌های Application را در پوشه‌ی `Interfaces` گذاشته‌ام و برای هر Use Case، Command و Handler را کنار هم در پوشه‌ی همان Use Case نگه می‌دارم.
+
+برای خطاهای دامنه و ورودی، Assertهای اختصاصی گذاشته‌ام تا خطا با نوع و اطلاعات مناسب تولید شود. Middleware هر سرویس از `CoreExeptionHandlerMiddleware` ارث می‌برد و exceptionهایی را که تا HTTP pipeline برسند به پاسخ استاندارد تبدیل می‌کند؛ بنابراین خطا نباید در لایه‌ی پایین‌تر بلعیده شود یا به شکل موفقیت برگردد.
 
 ## ارتباط بین Microserviceها و RabbitMQ
 
-برای عملیاتی که نتیجه باید همان لحظه مشخص باشد، مانند رزرو موجودی در جریان ثبت سفارش، Order از gRPC به MasterData درخواست می‌فرستد و پاسخ را پیش از نهایی‌کردن سفارش دریافت می‌کند. برای اعلان تغییر موجودی که بخشی از پاسخ هم‌زمان سفارش نیست، MasterData رویداد `ProductInventoryChangedMessage` را روی RabbitMQ منتشر می‌کند. سرویس‌های Order، MasterData، Wallet و Identity هرکدام پیام را از صف اختصاصی خود دریافت و از طریق MediatR به Command مربوط می‌فرستند. Handlerهای فعلی محل TODO برای اتصال به Notification Service هستند و هنوز منطق اعلان را اجرا نمی‌کنند.
+من در این راهکار دو نوع ارتباط را با دو هدف متفاوت گذاشته‌ام:
+
+- **gRPC برای درخواست هم‌زمان:** در جریان ساخت سفارش، `Order` از طریق `MasterDataProductAvailabilityGrpcProxy` به سرویس gRPC مربوط به `MasterData` درخواست رزرو موجودی می‌فرستد. `ProductAvailabilityGrpcService` در MasterData درخواست را به Contractهای Domain تبدیل می‌کند، رزرو را انجام می‌دهد و نتیجه‌ی `IsReserved` و اقلام ناموجود را برمی‌گرداند؛ Order بر اساس همان پاسخ سفارش را `Confirmed` یا `Rejected` می‌کند. MasterData متدهای gRPC دیگری برای افزایش و خواندن موجودی هم دارد، اما در جریان سفارش فعلی، Order متد رزرو را صدا می‌زند.
+- **RabbitMQ برای خبررسانی غیرهم‌زمان:** پس از افزایش موجودی یا رزرو موفق، MasterData رویداد `ProductInventoryChangedMessage` را منتشر می‌کند. Order، MasterData، Wallet و Identity هرکدام صف اختصاصی دارند و پیام را از طریق MediatR به Command Handler خودشان می‌رسانند. Handlerها فعلاً TODO اتصال به Notification Service هستند؛ منطق ارسال اعلان هنوز پیاده‌سازی نشده است.
 
 ### پیکربندی Exchange و Queue
 
@@ -61,7 +71,7 @@ Application مسئول هماهنگی Use Caseها، مدیریت جریان ک�
 
 `ProductInventoryQueue` باید با یکی از کلیدهای `SubscribingQueues` برابر باشد؛ هر سرویس از نام صف متفاوتی استفاده می‌کند، اما همگی به Exchange مشترک `ProductInventory` متصل می‌شوند. Exchange از نوع Fanout است، پس پیام به تمام صف‌های bound می‌رسد و `RoutingKey` در مسیریابی Fanout نقشی ندارد. `IsBinding` اتصال صف به Exchange را کنترل می‌کند. `AddHostedService` باعث می‌شود Host هنگام بالا آمدن سرویس، consumer را راه‌اندازی کند.
 
-Core، صف و Exchange را Durable تعریف می‌کند. با `AutoAck: false`، پس از پردازش موفق پیام ACK می‌شود؛ خطاها تا `JitterMaxRetry` بار با تأخیر jitterدار دوباره امتحان می‌شوند. پس از پایان retry، پیام با `requeue: false` رد می‌شود. چون در پیکربندی فعلی Dead Letter Exchange/Queue تعریف نشده، پیام ناموفق ممکن است حذف شود. همچنین publisher فعلی پیام را persistent علامت نمی‌زند و Publisher Confirm یا Outbox هم پیاده‌سازی نشده است؛ بنابراین Durable بودن صف و Exchange به‌تنهایی تضمین «عدم گم‌شدن پیام» یا سطح اطمینان ۹۹٪ نمی‌دهد. برای تضمین قوی‌تر باید Outbox، پیام persistent، Publisher Confirm و Dead Letter Queue اضافه و آزموده شوند.
+در `RabbitMqBaseService` که برای این پروژه استفاده کرده‌ام، صف و Exchange به‌صورت Durable ساخته می‌شوند. با `AutoAck: false`، پیام بعد از پردازش موفق ACK می‌شود؛ خطاها تا `JitterMaxRetry` بار با تأخیر jitterدار دوباره امتحان می‌شوند و بعد با `requeue: false` رد می‌شوند. چون Dead Letter Exchange/Queue نداریم، پیام ناموفق ممکن است حذف شود. Publisher هم فعلاً پیام را persistent علامت نمی‌زند و Publisher Confirm یا Outbox ندارد. برای همین من ادعای «عدم گم‌شدن پیام» یا تضمین ۹۹٪ نمی‌کنم؛ Durable بودن صف و Exchange به‌تنهایی برای چنین تضمینی کافی نیست. اگر بخواهم این تضمین را اضافه کنم، باید Outbox، پیام persistent، Publisher Confirm و Dead Letter Queue را پیاده‌سازی و آزمون کنم.
 
 ## پیش‌نیازها
 
