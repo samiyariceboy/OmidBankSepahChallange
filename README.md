@@ -2,7 +2,7 @@
 
 ## مبانی معماری و CoreLibrary
 
-`Taday.Corelibrary` توسط من نوشته شده و طی چند سال، با استفاده در پروژه‌های مختلف و اصلاح تدریجی، به بلوغ رسیده است. این کتابخانه پایه‌هایی مانند `AggregateRoot`، `BaseEntity`، `BaseDbContext`، `CoreExeptionHandlerMiddleware`، `RabbitMqBaseService`، `BaseRepository`، `BaseSpecification` و `CriteriaSpecification` را فراهم می‌کند و مبنای مشترک سرویس‌های این پروژه است. در ارائه‌ی کدچلنج، ابتدا این پایه‌ها و نقش آن‌ها توضیح داده می‌شوند.
+لایبریری `Taday.Corelibrary` توسط من نوشته شده و طی چند سال، با استفاده در پروژه‌های مختلف و اصلاح تدریجی، به بلوغ رسیده است. این کتابخانه پایه‌هایی مانند `AggregateRoot`، `BaseEntity`، `BaseDbContext`، `CoreExeptionHandlerMiddleware`، `RabbitMqBaseService`، `BaseRepository`، `BaseSpecification` و `CriteriaSpecification` را فراهم می‌کند و مبنای مشترک سرویس‌های این پروژه است. در ارائه‌ی کدچلنج، ابتدا این پایه‌ها و نقش آن‌ها توضیح داده می‌شوند.
 
 ### دامنه، Aggregate و اعتبارسنجی
 
@@ -11,13 +11,13 @@
 - Aggregate Rootها نگهدارنده‌ی Domain Eventها هستند؛ `BaseDbContext` پس از ذخیره‌ی موفق، رویدادهای موجود در Aggregate Rootهای Trackشده را منتشر و سپس پاک می‌کند.
 - نکته‌ی پیاده‌سازی فعلی Core: overload `SaveChangesAsync(CancellationToken)` استثناها را می‌گیرد و `0` برمی‌گرداند. بنابراین استثناهای این مسیر به Middleware نمی‌رسند؛ برای نمایش این خطاها توسط Middleware، باید exception در مسیر ذخیره‌سازی propagate شود.
 
-### Specification و Repository
+### کلاس های Specification و Repository
 
 در Domain، Specificationها محل تعریف فیلترها، مرتب‌سازی، صفحه‌بندی و Includeهای موردنیاز هستند؛ Repository زیرساختی آن‌ها را روی query اعمال می‌کند و خروجی را به‌شکل مجموعه‌ی مادی‌شده (مانند `List`) یا توالی برمی‌گرداند. `BaseSpecification` امکان استفاده و ترکیب Specificationها را فراهم می‌کند و `CriteriaSpecification` قابلیت ترکیب شرط‌ها با `And`، `Or` و `Not` را دارد. `MergedSpecification` نیز برای ارزیابی چند Specification در کنار هم وجود دارد.
 
 طبق قاعده‌ی DDD این راهکار، Repository اختصاصی برای Aggregate Root تعریف می‌شود. `BaseRepository` در Core نیز نوع موجودیت را به `IAggregateRoot` محدود کرده و به‌صورت abstract ارائه شده است؛ سرویس‌ها از Repositoryهای دامنه‌ای استفاده می‌کنند، نه از پیاده‌سازی عمومی آن. مرز پروژه‌ها Domain را از EF Core و جزئیات پایگاه‌داده جدا نگه می‌دارد و پیاده‌سازی Repository و Context در Infrastructure قرار دارد.
 
-### Application، قراردادها و خطاها
+### قراردادها و خطاها Application، 
 
 Application مسئول هماهنگی Use Caseها، مدیریت جریان کار و فراخوانی Domain Serviceها و وابستگی‌های بیرونی است؛ قواعد اصلی کسب‌وکار در Domain Service و Aggregateها نگهداری می‌شوند.
 
