@@ -1,3 +1,7 @@
+using MediatR;
+using OmidBankSepah.Identity.Application.UseCases.ProductInventoryChanged;
+using OmidBankSepah.Identity.Presentation.Registeration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddMediatR(configuration =>
+    configuration.RegisterServicesFromAssembly(typeof(ProductInventoryChangedCommand).Assembly));
+builder.Services.AddIdentityRabbitMq(builder.Configuration);
 
 var app = builder.Build();
 

@@ -7,6 +7,7 @@ using OmidBankSepah.MasterData.Domain.Repositories;
 using OmidBankSepah.MasterData.Infrastructure.Context;
 using OmidBankSepah.MasterData.Presentation.Registeration;
 using OmidBankSepah.MasterData.Domain.Entities.ProductRoot;
+using OmidBankSepah.MasterData.Application.UseCases.ProductInventoryChanged;
 using OmidBankSepah.MasterData.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,12 +27,15 @@ builder.Services.AddScoped(
     typeof(IAppLogger<>),
     typeof(Taday.Corelibrary.Common.Shared.Logger<>));
 builder.Services.AddMediatR(configuration =>
-    configuration.RegisterServicesFromAssembly(typeof(Products).Assembly));
+    configuration.RegisterServicesFromAssemblies(
+        typeof(Products).Assembly,
+        typeof(ProductInventoryChangedCommand).Assembly));
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 builder.Services.AddScoped<IProductInventoryRepository, ProductInventoryRepository>();
 builder.Services.AddScoped<IProductInventoryReservationRepository, ProductInventoryReservationRepository>();
 builder.Services.AddMasterDataServices(builder.Configuration);
+builder.Services.AddMasterDataRabbitMq(builder.Configuration);
 
 var app = builder.Build();
 

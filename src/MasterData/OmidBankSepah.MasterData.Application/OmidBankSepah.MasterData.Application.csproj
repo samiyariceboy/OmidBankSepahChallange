@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OmidBankSepah.MasterData.Domain\OmidBankSepah.MasterData.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\OmidBankSepah.IntegrationEvents\OmidBankSepah.IntegrationEvents.csproj" />
   </ItemGroup>
 
   <ItemGroup>

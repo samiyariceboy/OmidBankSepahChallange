@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
-using OmidBankSepah.MasterData.Application.Services.Inventory;
+using OmidBankSepah.MasterData.Application.Interfaces;
 using OmidBankSepah.MasterData.Domain.Contracts.Responses;
 
 namespace OmidBankSepah.MasterData.Infrastructure.Services.Cache;

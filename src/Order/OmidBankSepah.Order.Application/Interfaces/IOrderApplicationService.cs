@@ -1,7 +1,7 @@
 using OmidBankSepah.Order.Application.Contracts.Requests;
 using OmidBankSepah.Order.Domain.Contracts.Responses;
 
-namespace OmidBankSepah.Order.Application.Services.Orders;
+namespace OmidBankSepah.Order.Application.Interfaces;
 
 public interface IOrderApplicationService
 {

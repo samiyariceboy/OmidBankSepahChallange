@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using OmidBankSepah.Order.Application.Contracts.Requests;
 using OmidBankSepah.Order.Application.Contracts.Responses;
+using OmidBankSepah.Order.Application.Interfaces;
 using OmidBankSepah.Order.Domain.Constraint;
 using OmidBankSepah.Order.Domain.Contracts.Requests;
 using OmidBankSepah.Order.Domain.Contracts.Responses;

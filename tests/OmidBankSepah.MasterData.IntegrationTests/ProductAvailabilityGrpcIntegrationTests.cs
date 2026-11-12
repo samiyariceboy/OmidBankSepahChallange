@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using OmidBankSepah.MasterData.Application.Services.Inventory;
+using OmidBankSepah.MasterData.Application.Interfaces;
 using OmidBankSepah.MasterData.Domain.Contracts.Requests;
 using OmidBankSepah.MasterData.Domain.Entities.ProductRoot;
 using OmidBankSepah.MasterData.Grpc;

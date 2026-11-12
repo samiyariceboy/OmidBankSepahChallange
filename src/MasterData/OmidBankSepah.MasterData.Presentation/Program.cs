@@ -2,6 +2,7 @@ using OmidBankSepah.Order.Presentation.Registeration;
 using OmidBankSepah.MasterData.Presentation.Middlewares;
 using OmidBankSepah.MasterData.Presentation.Registeration;
 using OmidBankSepah.MasterData.Domain.Entities.ProductRoot;
+using OmidBankSepah.MasterData.Application.UseCases.ProductInventoryChanged;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,10 @@ builder.RegisterDb();
 builder.RegisterLoggerServices();
 builder.RegisterRepositories();
 builder.Services.AddMasterDataServices(builder.Configuration);
-builder.Services.RegisterMediatR(typeof(ProductCategory).Assembly);
+builder.Services.AddMasterDataRabbitMq(builder.Configuration);
+builder.Services.RegisterMediatR(
+    typeof(ProductCategory).Assembly,
+    typeof(ProductInventoryChangedCommand).Assembly);
 
 var app = builder.Build();
 

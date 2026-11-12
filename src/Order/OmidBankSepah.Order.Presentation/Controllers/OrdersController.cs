@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using OmidBankSepah.Order.Application.Contracts.Requests;
-using OmidBankSepah.Order.Application.Services.Orders;
+using OmidBankSepah.Order.Application.Interfaces;
 
 namespace OmidBankSepah.Order.Presentation.Controllers;
 

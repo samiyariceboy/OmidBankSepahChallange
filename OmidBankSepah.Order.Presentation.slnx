@@ -30,4 +30,7 @@
     <Project Path="src/MasterData/OmidBankSepah.MasterData.Infrastructure/OmidBankSepah.MasterData.Infrastructure.csproj" Id="ad8bc796-dbdf-43a6-bd77-0834f63f16ad" />
     <Project Path="src/MasterData/OmidBankSepah.MasterData.Presentation/OmidBankSepah.MasterData.Presentation.csproj" Id="0f0b479c-3086-4aa4-9f98-53bd6caaf2d2" />
 </Folder>
+<Folder Name="/Shared/">
+  <Project Path="src/Shared/OmidBankSepah.IntegrationEvents/OmidBankSepah.IntegrationEvents.csproj" />
+</Folder>
 </Solution>

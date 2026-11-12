@@ -1,6 +1,6 @@
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
-using OmidBankSepah.MasterData.Application.Services.Inventory;
+using OmidBankSepah.MasterData.Application.Interfaces;
 using OmidBankSepah.MasterData.Domain.Constraint;
 using OmidBankSepah.MasterData.Domain.Contracts.Requests;
 using OmidBankSepah.MasterData.Domain.Entities.ProductRoot;

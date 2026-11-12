@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OmidBankSepah.Identity.Domain\OmidBankSepah.Identity.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\OmidBankSepah.IntegrationEvents\OmidBankSepah.IntegrationEvents.csproj" />
   </ItemGroup>
 
 </Project>

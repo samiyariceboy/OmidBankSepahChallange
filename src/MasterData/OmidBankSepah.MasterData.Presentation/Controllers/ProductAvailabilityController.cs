@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using OmidBankSepah.MasterData.Application.Services.Inventory;
+using OmidBankSepah.MasterData.Application.Interfaces;
 using OmidBankSepah.MasterData.Presentation.Contracts.Requests;
 
 namespace OmidBankSepah.MasterData.Presentation.Controllers;

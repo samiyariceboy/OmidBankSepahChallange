@@ -5,6 +5,7 @@ using RedLockNet.SERedis.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OmidBankSepah.MasterData.Infrastructure.Services.Cache;
+using OmidBankSepah.MasterData.Application.Interfaces;
 using OmidBankSepah.MasterData.Application.Services.Inventory;
 using OmidBankSepah.MasterData.Domain.Services.DomainServices;
 

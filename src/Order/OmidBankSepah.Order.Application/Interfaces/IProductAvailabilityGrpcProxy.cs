@@ -1,6 +1,6 @@
 using OmidBankSepah.Order.Application.Contracts.Responses;
 
-namespace OmidBankSepah.Order.Application.Services.Orders;
+namespace OmidBankSepah.Order.Application.Interfaces;
 
 public interface IProductAvailabilityGrpcProxy
 {

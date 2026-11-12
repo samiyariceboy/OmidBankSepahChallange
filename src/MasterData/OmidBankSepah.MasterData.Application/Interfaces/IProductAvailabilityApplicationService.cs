@@ -1,7 +1,7 @@
 using OmidBankSepah.MasterData.Domain.Contracts.Requests;
 using OmidBankSepah.MasterData.Domain.Contracts.Responses;
 
-namespace OmidBankSepah.MasterData.Application.Services.Inventory;
+namespace OmidBankSepah.MasterData.Application.Interfaces;
 
 public interface IProductAvailabilityApplicationService
 {

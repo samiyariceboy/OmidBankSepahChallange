@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OmidBankSepah.MasterData.Grpc;
+using OmidBankSepah.Order.Application.Interfaces;
 using OmidBankSepah.Order.Application.Services.Orders;
 using OmidBankSepah.Order.Domain.Repositories;
 using OmidBankSepah.Order.Infrastructure.Repositories;

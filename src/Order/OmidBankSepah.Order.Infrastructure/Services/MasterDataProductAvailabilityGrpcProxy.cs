@@ -1,7 +1,7 @@
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using OmidBankSepah.MasterData.Grpc;
-using OmidBankSepah.Order.Application.Services.Orders;
+using OmidBankSepah.Order.Application.Interfaces;
 using ProductAvailabilityReservationReply = OmidBankSepah.Order.Application.Contracts.Responses.ProductAvailabilityReservationRes;
 using UnavailableProductAvailabilityReply = OmidBankSepah.Order.Application.Contracts.Responses.UnavailableProductAvailabilityRes;
 

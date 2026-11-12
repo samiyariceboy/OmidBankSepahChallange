@@ -3,6 +3,7 @@ using OmidBankSepah.Order.Presentation.Registeration;
 using OmidBankSepah.Wallet.Presentation.Registeration;
 using OmidBankSepah.Wallet.Infrastructure.Repositories;
 using OmidBankSepah.Wallet.Domain.Entities.WalletRoot.Aggregates;
+using OmidBankSepah.Wallet.Application.UseCases.ProductInventoryChanged;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,10 @@ builder.Services.AddOpenApi();
 builder.RegisterDb();
 builder.RegisterLoggerServices();
 builder.RegisterRepositories();
-builder.Services.RegisterMediatR(typeof(WalletTransaction).Assembly);
+builder.Services.RegisterMediatR(
+    typeof(WalletTransaction).Assembly,
+    typeof(ProductInventoryChangedCommand).Assembly);
+builder.Services.AddWalletRabbitMq(builder.Configuration);
 
 var app = builder.Build();
 
